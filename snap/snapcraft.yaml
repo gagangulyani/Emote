@@ -1,5 +1,5 @@
 name: emote
-version: '1.0.1'
+version: '2.0.0'
 license: GPL-3.0+
 summary: Modern emoji picker built on GTK3
 description: |
@@ -57,6 +57,8 @@ parts:
       - appmenu-gtk3-module
       - libcanberra-gtk-module
       - libcanberra-gtk3-module
+      # xdotool
+      - xdotool
   static:
     plugin: dump
     source: static/
@@ -72,16 +74,29 @@ parts:
       - usr/share/applications/emote.desktop
       - usr/share/icons/emote.svg
 
+plugs:
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/share/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/share/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/share/sounds
+    default-provider: gtk-common-themes
+
 slots:
   dbus-daemon:
     interface: dbus
     bus: session
     name: com.tomjwatson.Emote
 
-
 apps:
   emote:
-    command: desktop-launch $SNAP/static/setup-autostart $SNAP/bin/emote
+    command: desktop-launch $SNAP/static/prepare-launch $SNAP/bin/emote
     desktop: usr/share/applications/emote.desktop
     extensions: [gnome-3-28]
     slots: [dbus-daemon]
@@ -91,4 +106,5 @@ apps:
       - desktop
       - desktop-legacy
       - x11
+      - gsettings
       - wayland

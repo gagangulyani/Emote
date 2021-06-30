@@ -1,7 +1,7 @@
 import os
 import json
 from collections import defaultdict
-from emote import user_data
+from emote import user_data, config
 
 
 MAX_VERSION = 10.0
@@ -15,10 +15,8 @@ def init():
     global all_emojis
     global emojis_by_category
 
-    snap = os.environ.get("SNAP")
-
-    if snap:
-        filename = f"{snap}/static/emojis.json"
+    if config.is_snap:
+        filename = f"{config.snap_root}/static/emojis.json"
     else:
         filename = "static/emojis.json"
 
@@ -47,7 +45,10 @@ def update_recent_category():
     emojis_by_category["recent"] = []
 
     for char in user_data.load_recent_emojis():
-        emoji = get_emoji_by_char(char)
+        try:
+            emoji = get_emoji_by_char(char)
+        except:
+            continue
         emojis_by_category["recent"].append(
             {"char": char, "category": "recent", "name": emoji["name"]}
         )
@@ -78,9 +79,12 @@ def get_emojis_by_category():
 
 
 def search(query):
+    query = query.lower()
+
     def search_filter(emoji):
-        return emoji["name"].startswith(query) or any(
-            keyword.startswith(query) for keyword in emoji["keywords"]
-        )
+        parts = emoji["name"].split("_")
+        search_terms = parts + [" ".join(parts)] + emoji["keywords"]
+        search_terms = [search_term.lower() for search_term in search_terms]
+        return any(search_term.startswith(query) for search_term in search_terms)
 
     return list(filter(search_filter, all_emojis))

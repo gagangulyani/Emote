@@ -9,7 +9,9 @@
 
 Emote is a modern emoji picker for Linux 🚀. Written in GTK3, Emote is lightweight and stays out of your way.
 
-Launch the emoji picker with the configurable keyboard shortcut Ctrl+Alt+E and select one or more emojis to copy them to your clipboard.
+Launch the emoji picker with the configurable keyboard shortcut `Ctrl+Alt+E` and select one or more emojis to have them be automatically pasted into your currently focussed app.
+
+Note - Emote under Wayland cannot automatically paste the emoji into other apps and also requires manual registering of a global keyboard shortcut - [Hotkey In Wayland](https://github.com/tom-james-watson/Emote/wiki/Hotkey-In-Wayland). This is due to intentional restrictions in the design of Wayland itself.
 
 <p align="center">
   <img width="500" src="https://raw.githubusercontent.com/tom-james-watson/Emote/master/images/screenshot.png">
@@ -25,6 +27,8 @@ or
 sudo snap install emote
 ```
 
+An unofficial build of Emote is also available in the AUR : https://aur.archlinux.org/packages/emote.
+
 ## Guide
 
 ### Launching
@@ -35,7 +39,7 @@ The emoji picker can be opened with either the keyboard shortcut or by clicking 
 
 ### Usage
 
-Select an emoji to copy it to your clipboard. You can then paste the emoji wherever you need.
+Select an emoji to and have it be pasted to your currently focussed app. The emoji will also be copied to your clipboard, so you can then paste the emoji wherever you need.
 
 You can select multiple emojis by selecting them with right click.
 
@@ -60,7 +64,7 @@ Previous Emoji Category: `Ctrl+Shift+Tab`
 Install gtk development libraries:
 
 ```bash
-sudo apt install libgtk-3-dev libgirepository1.0-dev
+sudo apt install libgtk-3-dev libgirepository1.0-dev python3-venv gir1.2-keybinder-3.0 libkeybinder-dev
 ```
 
 Install pipenv:
@@ -113,6 +117,8 @@ make package
 
 ### Publishing
 
+First, ensure a git tag for the current version has been pushed.
+
 Ensure you are logged in to snapcraft:
 
 ```bash
@@ -124,13 +130,3 @@ Push the packaged snap to the `edge` channel on the snap store.
 ```bash
 snapcraft push --release=edge <path to .snap>
 ```
-
-## Attribution
-
-### App Icon
-
-Copyright 2020 Twitter, Inc and other contributors
-
-Thanks for the awesome team at Twitter.
-
-https://twemoji.twitter.com
